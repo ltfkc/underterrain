@@ -98,6 +98,7 @@ public class Game {
     public void changeGameListener(GameListener gameListener) {
         this.gameListener.dispose(this);
         this.gameListener = gameListener;
+        this.gameListener.create(this);
     }
 
     public float getDelta() {
