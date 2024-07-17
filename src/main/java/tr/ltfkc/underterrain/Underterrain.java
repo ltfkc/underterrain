@@ -1,13 +1,28 @@
 package tr.ltfkc.underterrain;
 
-import javax.swing.*;
+import tr.ltfkc.underterrain.engine.Game;
+import tr.ltfkc.underterrain.engine.GameListener;
 
-public class Underterrain {
+public class Underterrain implements GameListener {
+
+    @Override
+    public void create(Game game) {
+
+    }
+
+    @Override
+    public void render(Game game) {
+
+    }
+
+    @Override
+    public void dispose(Game game) {
+
+    }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("ads");
-        frame.setSize(500, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        Game game = new Game(800, 450, "Underterrain");
+        game.setGameListener(new Underterrain());
+        game.run();
     }
 }
