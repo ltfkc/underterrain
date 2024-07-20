@@ -2,6 +2,8 @@ package tr.ltfkc.underterrain.engine;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import tr.ltfkc.underterrain.engine.graphics.Color;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -80,6 +82,10 @@ public class Game {
                 delta = 0;
             }
         }
+        terminate();
+    }
+
+    private void terminate() {
         gameListener.dispose(this);
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
@@ -99,6 +105,21 @@ public class Game {
         this.gameListener.dispose(this);
         this.gameListener = gameListener;
         this.gameListener.create(this);
+    }
+
+    public void clearScreen(float r, float g, float b, float a) {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glClearColor(r, g, b, a);
+    }
+
+    public void clearScreen(Color color) {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glClearColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
+
+    public void exit(int status) {
+        terminate();
+        System.exit(status);
     }
 
     public float getDelta() {
