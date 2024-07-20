@@ -1,0 +1,50 @@
+package tr.ltfkc.underterrain.engine.graphics;
+
+import org.joml.Vector2f;
+
+public class Renderable {
+
+    private TexturedModel texturedModel;
+    private Vector2f position;
+    private Vector2f scale;
+    private float angle;
+
+    public Renderable(TexturedModel texturedModel, Vector2f position, Vector2f scale, float angle) {
+        this.texturedModel = texturedModel;
+        this.position = position;
+        this.angle = angle;
+        this.scale = scale;
+    }
+
+    public TexturedModel getTexturedModel() {
+        return texturedModel;
+    }
+
+    public void setTexturedModel(TexturedModel texturedModel) {
+        this.texturedModel = texturedModel;
+    }
+
+    public Vector2f getScale() {
+        return scale;
+    }
+
+    public void setScale(Vector2f scale) {
+        this.scale = scale;
+    }
+
+    public Vector2f getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2f position) {
+        this.position = position;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+}
