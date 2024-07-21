@@ -15,14 +15,26 @@ import java.util.Map;
 
 public class Renderer {
 
-    private StaticShader shader;
+    private StaticShader shader = new StaticShader();
     private Map<TexturedModel, List<Renderable>> renderables = new HashMap<>();
+    private Map<Renderable, Integer> priorityMap = new HashMap<>();
 
-    public Renderer() {
-        this.shader = new StaticShader();
+    private int priorityCount = 0;
+    public void prepare() {
+        prepare(Color.BLACK);
     }
 
-    public void processRenderable(Renderable renderable){
+    public void prepare(Color color) {
+        prepare(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
+
+    public void prepare(float r, float g, float b, float a) {
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glClearColor(r, g, b, a);
+    }
+
+    public void put(Renderable renderable){
         TexturedModel texturedModel = renderable.getTexturedModel();
         List<Renderable> batch = renderables.get(texturedModel);
         if (batch != null) {
@@ -32,6 +44,8 @@ public class Renderer {
             newBatch.add(renderable);
             renderables.put(texturedModel, newBatch);
         }
+        priorityMap.put(renderable, priorityCount);
+        priorityCount++;
     }
 
     public void render(Camera camera) {
@@ -42,12 +56,13 @@ public class Renderer {
             prepareTexturedModel(model);
             List<Renderable> batch = renderables.get(model);
             for (Renderable renderable : batch) {
-                prepareInstance(renderable);
+                prepareInstance(renderable, priorityMap.get(renderable));
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
             }
             unbindTexturedModel();
         }
         shader.stop();
+        renderables.clear();
     }
 
     public void dispose() {
@@ -71,18 +86,19 @@ public class Renderer {
         GL30.glBindVertexArray(0);
     }
 
-    private void prepareInstance(Renderable renderable) {
+    private void prepareInstance(Renderable renderable, int priority) {
         Matrix4f transformationMatrix = createTransformationMatrix(renderable.getPosition(),
-                new Vector2f(renderable.getScale()).mul(renderable.getTexturedModel().getTexture().getDimensions()), renderable.getAngle());
+                new Vector2f(renderable.getScale()).mul(renderable.getTexturedModel().getTexture().getDimensions()),
+                renderable.getAngle(), priority * (1f / priorityCount));
         shader.loadTransformationMatrix(transformationMatrix);
     }
 
-    private Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale, float angle) {
+    private Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale, float angle, float zBuffer) {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
-        matrix.translate(translation.x, translation.y, 0);
+        matrix.translate(translation.x, translation.y, zBuffer);
         matrix.rotate(angle, new Vector3f(0, 0, 1));
-        matrix.scale(scale.x, scale.y, 1);
+        matrix.scale(scale.x, scale.y, 64);
         return matrix;
     }
 }
