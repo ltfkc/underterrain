@@ -21,6 +21,15 @@ public class Renderable {
         renderableCount++;
     }
 
+    public Renderable(Renderable renderable) {
+        texturedModel = renderable.getTexturedModel();
+        position = new Vector2f(renderable.getPosition());
+        angle = renderable.getAngle();
+        scale = new Vector2f(renderable.getScale());
+        debugName = "Renderable #" + renderableCount;
+        renderableCount++;
+    }
+
     public void setDebugName(String debugName) {
         this.debugName = debugName;
     }
