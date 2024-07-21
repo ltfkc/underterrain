@@ -5,7 +5,14 @@ public class Color {
     public static final Color
             WHITE = new Color(1f, 1f, 1f, 1f),
             GRAY = new Color(0.5f, 0.5f, 0.5f, 1f),
-            LIGHT_GRAY = new Color(0.8f, 0.8f, 0.8f, 1f),
+            DARK_GRAY = new Color(0.15f, 0.15f, 0.15f, 1f),
+            BLUE = new Color(0f, 0f, 1f, 1f),
+            RED = new Color(1f, 0f, 0f, 1f),
+            GREEN = new Color(0f, 1f, 0f, 1f),
+            CYAN = new Color(0f, 1f, 1f, 1f),
+            MAGENTA = new Color(1f, 0f, 1f, 1f),
+            YELLOW = new Color(1f, 1f, 0f, 1f),
+            LIGHT_GRAY = new Color(0.85f, 0.85f, 0.85f, 1f),
             BLACK = new Color(0f, 0f, 0f, 1f);
 
     private float r, g, b, a;
