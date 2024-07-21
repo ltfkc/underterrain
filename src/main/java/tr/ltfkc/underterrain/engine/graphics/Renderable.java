@@ -4,9 +4,12 @@ import org.joml.Vector2f;
 
 public class Renderable {
 
+    private static int renderableCount = 0;
+
     private TexturedModel texturedModel;
     private Vector2f position;
     private Vector2f scale;
+    private String debugName;
     private float angle;
 
     public Renderable(TexturedModel texturedModel, Vector2f position, Vector2f scale, float angle) {
@@ -14,6 +17,16 @@ public class Renderable {
         this.position = position;
         this.angle = angle;
         this.scale = scale;
+        debugName = "Renderable #" + renderableCount;
+        renderableCount++;
+    }
+
+    public void setDebugName(String debugName) {
+        this.debugName = debugName;
+    }
+
+    public String getDebugName() {
+        return debugName;
     }
 
     public TexturedModel getTexturedModel() {
