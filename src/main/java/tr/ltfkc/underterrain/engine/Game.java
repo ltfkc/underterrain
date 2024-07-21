@@ -2,8 +2,6 @@ package tr.ltfkc.underterrain.engine;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import tr.ltfkc.underterrain.engine.graphics.Color;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
