@@ -1,24 +1,21 @@
 package tr.ltfkc.underterrain.engine.graphics;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Camera {
 
-    private Vector2f position;
     private Matrix4f projectionMatrix;
     private Matrix4f viewMatrix;
 
-    private float angle;
+    private float x, y, width, height, angle;
     private boolean needsUpdate;
 
-    public Camera(int width, int height) {
-        position = new Vector2f(0, 0);
-        angle = 0f;
-        projectionMatrix = new Matrix4f().ortho2D((float) -width / 2, (float) width / 2, (float) -height / 2, (float) height / 2);
-        needsUpdate = true;
-        update();
+    public Camera(float width, float height) {
+        x = y = angle = 0;
+        this.width = width;
+        this.height = height;
+        update(width, height);
     }
 
     public void update() {
@@ -26,9 +23,20 @@ public class Camera {
             viewMatrix = new Matrix4f();
             viewMatrix.identity();
             viewMatrix.rotate(angle, new Vector3f(0, 0, 1));
-            viewMatrix.translate(new Vector3f(-position.x, -position.y, 0));
+            viewMatrix.translate(new Vector3f(-x, -y, 0));
+            viewMatrix.translate(new Vector3f(-width / 2f, -height / 2f, 0));
             needsUpdate = false;
         }
+    }
+
+    public void update(float width, float height) {
+        projectionMatrix = new Matrix4f().ortho2D(-width / 2f, width / 2f, -height / 2f, height / 2f);
+
+        this.width = width;
+        this.height = height;
+
+        needsUpdate = true;
+        update();
     }
 
     public Matrix4f getProjectionMatrix() {
@@ -39,14 +47,24 @@ public class Camera {
         return viewMatrix;
     }
 
-    public Vector2f getPosition() {
-        return position;
+    public float getX() {
+        return x;
     }
 
-    public void setPosition(Vector2f position) {
-        this.position = position;
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
         needsUpdate = true;
     }
+
+    public void setX(float x) {
+        this.x = x;
+        needsUpdate = true;
+    }
+
     public float getAngle() {
         return angle;
     }
