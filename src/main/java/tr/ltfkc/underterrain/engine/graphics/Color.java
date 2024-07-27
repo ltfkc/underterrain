@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.graphics;
+package tr.ltfkc.underterrain.engine.graphics;
 
 public class Color {
 

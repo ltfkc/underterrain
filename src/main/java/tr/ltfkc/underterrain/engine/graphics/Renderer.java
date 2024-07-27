@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.graphics;
+package tr.ltfkc.underterrain.engine.graphics;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -57,11 +57,12 @@ public class Renderer {
         put(renderable);
     }
 
+    public void put(TexturedModel model, float x, float y, float angle) {
+        put(model, x, y, model.getTexture().getWidth(), model.getTexture().getHeight(), angle);
+    }
+
     public void put(TexturedModel model, float x, float y) {
-        float width = model.getTexture().getWidth();
-        float height = model.getTexture().getHeight();
-        Renderable renderable = new Renderable(model, x + (width / 2f), y + (height / 2f), width, height, 0);
-        put(renderable);
+        put(model, x, y, 0);
     }
 
     public void render(Camera camera) {

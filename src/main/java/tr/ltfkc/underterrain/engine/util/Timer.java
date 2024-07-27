@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.util;
+package tr.ltfkc.underterrain.engine.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +26,8 @@ public class Timer {
         elapsedTimeMap.clear();
         ringingMap.clear();
     }
+
     public void update(float delta) {
-        ringingMap.clear();
         for (String channel : timeRequiredMap.keySet()) {
             float elapsedTime = elapsedTimeMap.get(channel) + delta;
             if (elapsedTime >= timeRequiredMap.get(channel)) {
@@ -35,6 +35,7 @@ public class Timer {
                 ringingMap.put(channel, true);
             } else {
                 elapsedTimeMap.put(channel, elapsedTime);
+                ringingMap.put(channel, false);
             }
         }
     }

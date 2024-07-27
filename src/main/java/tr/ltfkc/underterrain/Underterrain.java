@@ -1,10 +1,9 @@
 package tr.ltfkc.underterrain;
 
-import org.lwjgl.glfw.GLFW;
-
-import tr.ltfkc.underterrain.game.Game;
-import tr.ltfkc.underterrain.game.GameListener;
-import tr.ltfkc.underterrain.graphics.*;
+import tr.ltfkc.underterrain.engine.Game;
+import tr.ltfkc.underterrain.engine.GameListener;
+import tr.ltfkc.underterrain.engine.graphics.*;
+import tr.ltfkc.underterrain.engine.util.Keys;
 
 public class Underterrain implements GameListener {
 
@@ -34,15 +33,15 @@ public class Underterrain implements GameListener {
 
         game.setWindowTitle("Underterrain | FPS " + game.getFPS());
 
-        y += game.isKeyPressed(GLFW.GLFW_KEY_W) ? speed * game.getDelta() : 0;
-        y -= game.isKeyPressed(GLFW.GLFW_KEY_S) ? speed * game.getDelta() : 0;
-        x += game.isKeyPressed(GLFW.GLFW_KEY_D) ? speed * game.getDelta() : 0;
-        x -= game.isKeyPressed(GLFW.GLFW_KEY_A) ? speed * game.getDelta() : 0;
+        y += game.isKeyPressed(Keys.KEY_W) ? speed * game.getDelta() : 0;
+        y -= game.isKeyPressed(Keys.KEY_S) ? speed * game.getDelta() : 0;
+        x += game.isKeyPressed(Keys.KEY_D) ? speed * game.getDelta() : 0;
+        x -= game.isKeyPressed(Keys.KEY_A) ? speed * game.getDelta() : 0;
 
-        speed += game.isKeyPressed(GLFW.GLFW_KEY_UP) ? 100 * game.getDelta() : 0;
-        speed -= game.isKeyPressed(GLFW.GLFW_KEY_DOWN) ? 100 * game.getDelta() : 0;
+        speed += game.isKeyPressed(Keys.KEY_UP) ? 100 * game.getDelta() : 0;
+        speed -= game.isKeyPressed(Keys.KEY_DOWN) ? 100 * game.getDelta() : 0;
 
-        renderer.put(model, x, y, model.getTexture().getWidth(), model.getTexture().getHeight(), 0);
+        renderer.put(model, x, y);
         renderer.render(camera);
     }
 
@@ -58,7 +57,7 @@ public class Underterrain implements GameListener {
     }
 
     public static void main(String[] args) {
-        Game game = new Game(16 * 50, 9 * 50, "Underterrain", -1);
+        Game game = new Game(16 * 50, 9 * 50, "Underterrain", 144);
         game.setGameListener(new Underterrain());
         game.run();
     }

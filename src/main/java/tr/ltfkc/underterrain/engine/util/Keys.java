@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.util;
+package tr.ltfkc.underterrain.engine.util;
 
 public class Keys {
 
