@@ -18,9 +18,9 @@ public class StaticShader extends ShaderProgram{
             uniform mat4 viewMatrix;
                         
             void main(void) {
-            	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position,1.0);
+            	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
             	pass_textureCoordinates = textureCoordinates;
-            	colour = vec3(position.x+0.5,0.0,position.y+0.5);
+            	colour = vec3(position.x + 0.5, 0.0, position.y + 0.5);
             }
             """;
     private static final String FRAGMENT_SRC = """
@@ -34,7 +34,7 @@ public class StaticShader extends ShaderProgram{
             uniform sampler2D modelTexture;
                 
             void main(void) {
-            	out_Color = texture(modelTexture,pass_textureCoordinates);
+            	out_Color = texture(modelTexture, pass_textureCoordinates);
             }
             """;
 
