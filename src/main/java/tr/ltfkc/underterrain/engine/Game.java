@@ -2,6 +2,7 @@ package tr.ltfkc.underterrain.engine;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -11,6 +12,9 @@ public class Game {
     private GameListener gameListener;
 
     private long glfwWindow;
+    private int width, height;
+    private String title;
+    private boolean vsync = false;
     private double delta;
     private int fps;
     private int fpsCap;
@@ -30,25 +34,38 @@ public class Game {
         }
 
         glfwDefaultWindowHints();
-
+        
         glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
         if (glfwWindow == NULL) {
             throw new IllegalStateException("Failed to create the GLFW window.");
         }
+        this.title = title;
+        this.width = width;
+        this.height = height;
 
         glfwSetKeyCallback(glfwWindow, this::keyCallback);
         glfwSetMouseButtonCallback(glfwWindow, this::mouseButtonCallback);
         glfwSetCursorPosCallback(glfwWindow, this::mousePosCallback);
         glfwSetScrollCallback(glfwWindow, this::mouseScrollCallback);
+        glfwSetWindowSizeCallback(glfwWindow, this::windowSizeCallback);
 
         glfwMakeContextCurrent(glfwWindow);
         glfwSwapInterval(0);
         glfwShowWindow(glfwWindow);
     }
 
+    private void windowSizeCallback(long window, int width, int height){
+        if (width != 0 && height != 0) {
+            this.width = width;
+            this.height = height;
+            gameListener.resize(this, width, height);
+            GL11.glViewport(0, 0, width, height);
+        }
+    }
+
     public void run() {
         if(isRunning)
-            throw new IllegalStateException("Cannot run the game already running");
+            throw new IllegalStateException("Cannot run the game already running.");
         if (gameListener == null)
             throw new IllegalStateException("Cannot run the game without GameListener.");
 
@@ -62,7 +79,7 @@ public class Game {
             double time = glfwGetTime();
             delta += time - last;
             last = time;
-            if (delta > 1d / fpsCap) {
+            if (fpsCap == -1 || delta > 1d / fpsCap) {
                 frames++;
                 fpsTimer += delta;
                 if(fpsTimer >= 1) {
@@ -91,6 +108,24 @@ public class Game {
 
     // Utilities
 
+    public void setWindowTitle(String title) {
+        this.title = title;
+        glfwSetWindowTitle(glfwWindow, title);
+    }
+
+    public String getWindowTitle() {
+        return title;
+    }
+
+    public void setVSync(boolean vsync) {
+        this.vsync = vsync;
+        glfwSwapInterval(vsync ? 1 : 0);
+    }
+
+    public boolean isVSync() {
+        return vsync;
+    }
+
     public void setGameListener(GameListener gameListener) {
         this.gameListener = gameListener;
     }
@@ -105,9 +140,8 @@ public class Game {
         this.gameListener.create(this);
     }
 
-    public void exit(int status) {
-        terminate();
-        System.exit(status);
+    public void close() {
+        glfwSetWindowShouldClose(glfwWindow, true);
     }
 
     public float getDelta() {
@@ -127,7 +161,17 @@ public class Game {
     }
 
     public void setWindowSize(int width, int height) {
+        this.width = width;
+        this.height = height;
         glfwSetWindowSize(glfwWindow, width, height);
+    }
+
+    public int getWindowWidth() {
+        return width;
+    }
+
+    public int getWindowHeight() {
+        return height;
     }
 
     // KEYBOARD INPUT
