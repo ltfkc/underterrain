@@ -11,11 +11,24 @@ public class Timer {
 
     public void createChannel(String name, float timeRequired) {
         timeRequiredMap.put(name, timeRequired);
+        elapsedTimeMap.put(name, 0f);
+        ringingMap.put(name, false);
     }
 
+    public void removeChannel(String name) {
+        timeRequiredMap.remove(name);
+        elapsedTimeMap.remove(name);
+        ringingMap.remove(name);
+    }
+
+    public void clear() {
+        timeRequiredMap.clear();
+        elapsedTimeMap.clear();
+        ringingMap.clear();
+    }
     public void update(float delta) {
         ringingMap.clear();
-        for (String channel : elapsedTimeMap.keySet()) {
+        for (String channel : timeRequiredMap.keySet()) {
             float elapsedTime = elapsedTimeMap.get(channel) + delta;
             if (elapsedTime >= timeRequiredMap.get(channel)) {
                 elapsedTimeMap.put(channel, 0f);
