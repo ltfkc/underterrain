@@ -7,25 +7,27 @@ public class Renderable {
     private static int renderableCount = 0;
 
     private TexturedModel texturedModel;
-    private Vector2f position;
-    private Vector2f scale;
     private String debugName;
-    private float angle;
+    private float x, y, width, height, angle;
 
-    public Renderable(TexturedModel texturedModel, Vector2f position, Vector2f scale, float angle) {
+    public Renderable(TexturedModel texturedModel, float x, float y, float width, float height, float angle) {
         this.texturedModel = texturedModel;
-        this.position = position;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.angle = angle;
-        this.scale = scale;
         debugName = "Renderable #" + renderableCount;
         renderableCount++;
     }
 
     public Renderable(Renderable renderable) {
         texturedModel = renderable.getTexturedModel();
-        position = new Vector2f(renderable.getPosition());
+        x = renderable.getX();
+        y = renderable.getY();
+        width = renderable.getWidth();
+        height = renderable.getHeight();
         angle = renderable.getAngle();
-        scale = new Vector2f(renderable.getScale());
         debugName = "Renderable #" + renderableCount;
         renderableCount++;
     }
@@ -46,20 +48,20 @@ public class Renderable {
         this.texturedModel = texturedModel;
     }
 
-    public Vector2f getScale() {
-        return scale;
+    public float getX() {
+        return x;
     }
 
-    public void setScale(Vector2f scale) {
-        this.scale = scale;
+    public float getY() {
+        return y;
     }
 
-    public Vector2f getPosition() {
-        return position;
+    public float getHeight() {
+        return height;
     }
 
-    public void setPosition(Vector2f position) {
-        this.position = position;
+    public float getWidth() {
+        return width;
     }
 
     public float getAngle() {
@@ -68,5 +70,13 @@ public class Renderable {
 
     public void setAngle(float angle) {
         this.angle = angle;
+    }
+
+    public Vector2f getPosition() {
+        return new Vector2f(x, y);
+    }
+
+    public Vector2f getDimensions() {
+        return new Vector2f(width, height);
     }
 }
