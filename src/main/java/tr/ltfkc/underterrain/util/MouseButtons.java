@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.engine.util;
+package tr.ltfkc.underterrain.util;
 
 public class MouseButtons {
 

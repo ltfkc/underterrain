@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.engine.util;
+package tr.ltfkc.underterrain.util;
 
 import java.util.HashMap;
 import java.util.Map;

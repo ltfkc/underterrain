@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.engine;
+package tr.ltfkc.underterrain.game;
 
 public interface GameListener {
 

@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.engine.graphics;
+package tr.ltfkc.underterrain.graphics;
 
 public class RawModel {
 

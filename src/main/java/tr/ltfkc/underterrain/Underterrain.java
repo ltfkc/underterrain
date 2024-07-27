@@ -1,11 +1,10 @@
 package tr.ltfkc.underterrain;
 
 import org.lwjgl.glfw.GLFW;
-import tr.ltfkc.underterrain.engine.Game;
-import tr.ltfkc.underterrain.engine.GameListener;
-import tr.ltfkc.underterrain.engine.graphics.*;
-import tr.ltfkc.underterrain.engine.graphics.Loader;
-import tr.ltfkc.underterrain.engine.graphics.Camera;
+
+import tr.ltfkc.underterrain.game.Game;
+import tr.ltfkc.underterrain.game.GameListener;
+import tr.ltfkc.underterrain.graphics.*;
 
 public class Underterrain implements GameListener {
 
@@ -14,17 +13,18 @@ public class Underterrain implements GameListener {
     Renderer renderer;
     TexturedModel model;
 
-    float x, y;
+    float x, y, speed;
 
     @Override
     public void create(Game game) {
-        camera = new Camera(game.getWindowWidth(), game.getWindowHeight());
+        camera = new Camera(100, 100 * (float) game.getWindowHeight() / game.getWindowWidth());
         renderer = new Renderer();
         loader = new Loader();
 
         model = new TexturedModel(loader, "/grass.png");
 
         x = y = 0;
+        speed = 100f;
     }
 
     @Override
@@ -34,10 +34,13 @@ public class Underterrain implements GameListener {
 
         game.setWindowTitle("Underterrain | FPS " + game.getFPS());
 
-        y += game.isKeyPressed(GLFW.GLFW_KEY_W) ? 1 : 0;
-        y -= game.isKeyPressed(GLFW.GLFW_KEY_S) ? 1 : 0;
-        x += game.isKeyPressed(GLFW.GLFW_KEY_D) ? 1 : 0;
-        x -= game.isKeyPressed(GLFW.GLFW_KEY_A) ? 1 : 0;
+        y += game.isKeyPressed(GLFW.GLFW_KEY_W) ? speed * game.getDelta() : 0;
+        y -= game.isKeyPressed(GLFW.GLFW_KEY_S) ? speed * game.getDelta() : 0;
+        x += game.isKeyPressed(GLFW.GLFW_KEY_D) ? speed * game.getDelta() : 0;
+        x -= game.isKeyPressed(GLFW.GLFW_KEY_A) ? speed * game.getDelta() : 0;
+
+        speed += game.isKeyPressed(GLFW.GLFW_KEY_UP) ? 100 * game.getDelta() : 0;
+        speed -= game.isKeyPressed(GLFW.GLFW_KEY_DOWN) ? 100 * game.getDelta() : 0;
 
         renderer.put(model, x, y, model.getTexture().getWidth(), model.getTexture().getHeight(), 0);
         renderer.render(camera);
@@ -55,7 +58,7 @@ public class Underterrain implements GameListener {
     }
 
     public static void main(String[] args) {
-        Game game = new Game(64 * 15, 9 * 15, "Underterrain", 144);
+        Game game = new Game(16 * 50, 9 * 50, "Underterrain", -1);
         game.setGameListener(new Underterrain());
         game.run();
     }

@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.engine;
+package tr.ltfkc.underterrain.game;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;

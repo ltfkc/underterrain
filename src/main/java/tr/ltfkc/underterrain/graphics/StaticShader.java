@@ -1,4 +1,4 @@
-package tr.ltfkc.underterrain.engine.graphics;
+package tr.ltfkc.underterrain.graphics;
 
 import org.joml.Matrix4f;
 
