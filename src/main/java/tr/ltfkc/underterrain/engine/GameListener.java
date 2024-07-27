@@ -6,5 +6,7 @@ public interface GameListener {
 
     void render(Game game);
 
+    void resize(Game game, int width, int height);
+
     void dispose(Game game);
 }
