@@ -14,7 +14,8 @@ import java.util.Map;
 public class Renderer {
 
     private StaticShader shader = new StaticShader();
-    private Map<TexturedModel, HashMap<Renderable, Integer>> renderables = new HashMap<>();
+    private Map<TexturedModel, HashMap<Sprite, Integer>> sprites = new HashMap<>();
+    private Color color;
 
     private int priorityCount = 0;
 
@@ -24,6 +25,16 @@ public class Renderer {
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glAlphaFunc(GL11.GL_GREATER, 0f);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+
+        color = Color.WHITE;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public void prepare() {
@@ -39,22 +50,24 @@ public class Renderer {
         GL11.glClearColor(r, g, b, a);
     }
 
-    public void put(Renderable renderable){
-        TexturedModel texturedModel = renderable.getTexturedModel();
-        HashMap<Renderable, Integer> batch = renderables.get(texturedModel);
-        if (batch != null) {
-            batch.put(renderable, priorityCount);
-        } else {
-            HashMap<Renderable, Integer> newBatch = new HashMap<>();
-            newBatch.put(renderable, priorityCount);
-            renderables.put(texturedModel, newBatch);
+    public void put(Sprite sprite){
+        if (sprite != null) {
+            TexturedModel texturedModel = sprite.getTexturedModel();
+            HashMap<Sprite, Integer> batch = sprites.get(texturedModel);
+            if (batch != null) {
+                batch.put(sprite, priorityCount);
+            } else {
+                HashMap<Sprite, Integer> newBatch = new HashMap<>();
+                newBatch.put(sprite, priorityCount);
+                sprites.put(texturedModel, newBatch);
+            }
+            priorityCount++;
         }
-        priorityCount++;
     }
 
-    public void put(TexturedModel model, float x, float y, float width, float height, float angle) { // 80
-        Renderable renderable = new Renderable(model, x + (width / 2f), y + (height / 2f), width, height, angle);
-        put(renderable);
+    public void put(TexturedModel model, float x, float y, float width, float height, float angle) {
+        Sprite sprite = new Sprite(model, x + (width / 2f), y + (height / 2f), width, height, angle);
+        put(sprite);
     }
 
     public void put(TexturedModel model, float x, float y, float angle) {
@@ -69,17 +82,20 @@ public class Renderer {
         shader.start();
         shader.loadProjectionMatrix(camera.getProjectionMatrix());
         shader.loadViewMatrix(camera.getViewMatrix());
-        for (TexturedModel model : renderables.keySet()) {
+        shader.loadColor(color);
+        for (TexturedModel model : sprites.keySet()) {
             prepareTexturedModel(model);
-            HashMap<Renderable, Integer> batch = renderables.get(model);
-            for (Renderable renderable : batch.keySet()) {
-                prepareInstance(renderable, batch.get(renderable));
-                GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+            HashMap<Sprite, Integer> batch = sprites.get(model);
+            for (Sprite sprite : batch.keySet()) {
+                if(sprite.isVisible()) {
+                    prepareInstance(sprite, batch.get(sprite));
+                    GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+                }
             }
             unbindTexturedModel();
         }
         shader.stop();
-        renderables.clear();
+        sprites.clear();
         priorityCount = 0;
     }
 
@@ -102,10 +118,10 @@ public class Renderer {
         GL30.glBindVertexArray(0);
     }
 
-    private void prepareInstance(Renderable renderable, int priority) {
-        Matrix4f transformationMatrix = createTransformationMatrix(renderable.getPosition(),
-                renderable.getDimensions(),
-                renderable.getAngle(), priority * (1f / priorityCount));
+    private void prepareInstance(Sprite sprite, int priority) {
+        Matrix4f transformationMatrix = createTransformationMatrix(sprite.getPosition(),
+                sprite.getDimensions(),
+                sprite.getAngle(), priority * (1f / priorityCount));
         shader.loadTransformationMatrix(transformationMatrix);
     }
 
