@@ -2,16 +2,15 @@ package tr.ltfkc.underterrain.engine.graphics;
 
 import org.joml.Vector2f;
 
-public class Renderable {
+public class Sprite {
 
     private static int renderableCount = 0;
 
     private TexturedModel texturedModel;
-    private String debugName;
     private float x, y, width, height, angle;
     private boolean visible;
 
-    public Renderable(TexturedModel texturedModel, float x, float y, float width, float height, float angle) {
+    public Sprite(TexturedModel texturedModel, float x, float y, float width, float height, float angle) {
         this.texturedModel = texturedModel;
         this.x = x;
         this.y = y;
@@ -19,12 +18,10 @@ public class Renderable {
         this.height = height;
         this.angle = angle;
         visible = true;
-        debugName = "Renderable #" + renderableCount;
-        renderableCount++;
     }
 
-    public Renderable(Renderable renderable) {
-        this(renderable.getTexturedModel(), renderable.getX(), renderable.getY(), renderable.getWidth(), renderable.getHeight(), renderable.getAngle());
+    public Sprite(Sprite sprite) {
+        this(sprite.getTexturedModel(), sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight(), sprite.getAngle());
     }
 
     public void setVisible(boolean visible) {
@@ -33,14 +30,6 @@ public class Renderable {
 
     public boolean isVisible() {
         return visible;
-    }
-
-    public void setDebugName(String debugName) {
-        this.debugName = debugName;
-    }
-
-    public String getDebugName() {
-        return debugName;
     }
 
     public TexturedModel getTexturedModel() {
