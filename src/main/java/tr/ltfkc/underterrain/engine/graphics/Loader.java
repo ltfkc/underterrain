@@ -25,10 +25,18 @@ public class Loader {
     public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices){
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
-        storeDataInAttributeList(0,3,positions);
-        storeDataInAttributeList(1,2,textureCoords);
+        storeDataInAttributeList(0, 3, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
         unbindVAO();
-        return new RawModel(vaoID,indices.length);
+        return new RawModel(vaoID, indices.length);
+    }
+
+    public TexturedModel loadTexturedModel(String filepath) {
+        float[] vertices = {-0.5f, 0.5f, 0, -0.5f, -0.5f, 0, 0.5f, -0.5f, 0, 0.5f, 0.5f, 0};
+        int[] indices = {0, 1, 3, 3, 1, 2};
+        float[] textureCoords = {0, 0, 0, 1, 1, 1, 1, 0};
+
+        return new TexturedModel(loadToVAO(vertices, textureCoords, indices), loadTexture(filepath));
     }
 
     public Texture loadTexture(String filepath) {
