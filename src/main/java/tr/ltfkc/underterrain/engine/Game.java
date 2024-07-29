@@ -20,11 +20,6 @@ public class Game {
     private int fpsCap;
     private boolean isRunning = false;
 
-    private boolean[] pressedKeys = new boolean[350];
-    private boolean[] pressedMouseButtons = new boolean[8];
-    private double mouseScrollX, mouseScrollY;
-    private double mouseX, mouseY, lastMouseX, lastMouseY;
-
     public Game(int width, int height, String title, int fpsCap) {
         this.fpsCap = fpsCap;
         GLFWErrorCallback.createPrint(System.err).set();
@@ -43,10 +38,10 @@ public class Game {
         this.width = width;
         this.height = height;
 
-        glfwSetKeyCallback(glfwWindow, this::keyCallback);
-        glfwSetMouseButtonCallback(glfwWindow, this::mouseButtonCallback);
-        glfwSetCursorPosCallback(glfwWindow, this::mousePosCallback);
-        glfwSetScrollCallback(glfwWindow, this::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, InputManager::keyCallback);
+        glfwSetMouseButtonCallback(glfwWindow, InputManager::mouseButtonCallback);
+        glfwSetCursorPosCallback(glfwWindow, InputManager::mousePosCallback);
+        glfwSetScrollCallback(glfwWindow, InputManager::mouseScrollCallback);
         glfwSetWindowSizeCallback(glfwWindow, this::windowSizeCallback);
 
         glfwMakeContextCurrent(glfwWindow);
@@ -90,10 +85,7 @@ public class Game {
                 glfwPollEvents();
                 gameListener.render(this);
                 glfwSwapBuffers(glfwWindow);
-                mouseScrollX = 0;
-                mouseScrollY = 0;
-                lastMouseX = mouseX;
-                lastMouseY = mouseY;
+                InputManager.update();
                 delta = 0;
             }
         }
@@ -172,69 +164,5 @@ public class Game {
 
     public int getWindowHeight() {
         return height;
-    }
-
-    // KEYBOARD INPUT
-
-    public boolean isKeyPressed(int key) {
-        return pressedKeys[key];
-    }
-
-    private void keyCallback(long window, int key, int scancode, int action, int mods) {
-        if (action == GLFW_PRESS) {
-            pressedKeys[key] = true;
-        } else if (action == GLFW_RELEASE) {
-            pressedKeys[key] = false;
-        }
-    }
-
-    // MOUSE INPUT
-
-    public boolean isMouseButtonPressed(int button) {
-        return pressedMouseButtons[button];
-    }
-
-    public double getMouseX() {
-        return mouseX;
-    }
-
-    public double getMouseY() {
-        return mouseY;
-    }
-
-    public float getMouseDX() {
-        return (float) (mouseX - lastMouseX);
-    }
-
-    public float getMouseDY() {
-        return (float) (mouseY - lastMouseY);
-    }
-
-    public float getMouseScrollX() {
-        return (float) mouseScrollX;
-    }
-
-    public float getMouseScrollY() {
-        return (float) mouseScrollY;
-    }
-
-    private void mousePosCallback(long window, double mouseX, double mouseY) {
-        lastMouseX = this.mouseX;
-        lastMouseY = this.mouseY;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
-    }
-
-    private void mouseButtonCallback(long window, int button, int action, int mods) {
-        if (action == GLFW_PRESS) {
-            pressedMouseButtons[button] = true;
-        } else if (action == GLFW_RELEASE) {
-            pressedMouseButtons[button] = false;
-        }
-    }
-
-    private void mouseScrollCallback(long window, double xOffset, double yOffset) {
-        mouseScrollX = xOffset;
-        mouseScrollY = yOffset;
     }
 }
