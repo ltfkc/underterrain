@@ -2,7 +2,7 @@ package tr.ltfkc.underterrain.engine.graphics;
 
 import org.joml.Vector2f;
 
-public class Sprite {
+public class Renderable {
 
     private static int renderableCount = 0;
 
@@ -10,7 +10,7 @@ public class Sprite {
     private float x, y, width, height, angle;
     private boolean visible;
 
-    public Sprite(TexturedModel texturedModel, float x, float y, float width, float height, float angle) {
+    public Renderable(TexturedModel texturedModel, float x, float y, float width, float height, float angle) {
         this.texturedModel = texturedModel;
         this.x = x;
         this.y = y;
@@ -20,8 +20,12 @@ public class Sprite {
         visible = true;
     }
 
-    public Sprite(Sprite sprite) {
-        this(sprite.getTexturedModel(), sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight(), sprite.getAngle());
+    public Renderable(Renderable renderable) {
+        this(renderable.getTexturedModel(), renderable.getX(), renderable.getY(), renderable.getWidth(), renderable.getHeight(), renderable.getAngle());
+    }
+
+    public void render(Renderer renderer) {
+        renderer.render(this);
     }
 
     public void setVisible(boolean visible) {

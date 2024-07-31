@@ -3,6 +3,7 @@ package tr.ltfkc.underterrain.game;
 import tr.ltfkc.underterrain.engine.Game;
 import tr.ltfkc.underterrain.engine.GameListener;
 import tr.ltfkc.underterrain.engine.graphics.*;
+import tr.ltfkc.underterrain.game.elements.World;
 
 public class Survival implements GameListener {
 
@@ -13,6 +14,8 @@ public class Survival implements GameListener {
     TexturedModel grass;
     TexturedModel stone;
 
+    World world;
+
     @Override
     public void create(Game game) {
         camera = new Camera(100, 100 * (float) game.getWindowHeight() / game.getWindowWidth());
@@ -21,16 +24,18 @@ public class Survival implements GameListener {
 
         grass = loader.loadTexturedModel("/grass.png");
         stone = loader.loadTexturedModel("/stone.png");
+
+        world = new World();
     }
 
     @Override
     public void render(Game game) {
         camera.update();
+        world.update(game.getDelta(), null);
 
-        renderer.prepare(Color.DARK_GRAY);
-
-
-        renderer.render(camera);
+        renderer.start(Color.DARK_GRAY, camera);
+        world.render(renderer);
+        renderer.stop();
     }
 
     @Override
